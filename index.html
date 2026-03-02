@@ -1964,28 +1964,29 @@
 
         .popup-btn {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-top: 30px;
         }
 
         .popup-btn .btn {
-            background: transparent;
-            border: 2px solid var(--secondary);
-            color: white;
-            padding: 15px 50px;
-            font-size: 1.3rem;
-            font-weight: 700;
-            letter-spacing: 3px;
-            position: relative;
-            overflow: hidden;
-            transition: 0.4s;
-            box-shadow: 0 0 20px #d50000;
+            width: 100%;
+            max-width: 300px;
+            padding: 15px 30px;
+            font-size: 1.1rem;
         }
 
-        .popup-btn .btn:hover {
-            background: var(--secondary);
-            border-color: white;
-            transform: scale(1.05);
-            box-shadow: 0 0 40px #ff0000;
+        .btn-close-secondary {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.3);
+            color: #fff;
+            box-shadow: none;
+        }
+
+        .btn-close-secondary:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--secondary);
         }
 
         /* ícone de moto */
@@ -2296,15 +2297,55 @@
 
             .popup-card {
                 padding: 20px 15px;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+
+            .popup-close {
+                width: 44px;
+                height: 44px;
+                font-size: 1.8rem;
+                top: 10px;
+                right: 10px;
             }
 
             .countdown-item {
                 min-width: 80px;
-                padding: 15px 10px;
+                padding: 12px 8px;
             }
 
             .countdown-number {
-                font-size: 2.5rem;
+                font-size: 2.2rem;
+            }
+
+            .countdown-label {
+                font-size: 0.75rem;
+            }
+
+            .popup-title {
+                font-size: 2rem;
+            }
+
+            .popup-sub {
+                font-size: 1rem;
+            }
+
+            .popup-description {
+                font-size: 0.95rem;
+            }
+
+            .popup-detail {
+                flex-direction: column;
+                gap: 8px;
+                align-items: center;
+            }
+
+            .popup-btn {
+                gap: 10px;
+            }
+
+            .popup-btn .btn {
+                max-width: 100%;
             }
         }
 
@@ -2430,7 +2471,11 @@
             }
 
             .popup-sub {
-                font-size: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .popup-description {
+                font-size: 0.85rem;
             }
 
             .countdown-item {
@@ -2445,12 +2490,6 @@
             .countdown-label {
                 font-size: 0.7rem;
             }
-
-            .popup-detail {
-                flex-direction: column;
-                gap: 10px;
-                align-items: center;
-            }
         }
 
         @media (max-width: 360px) {
@@ -2463,9 +2502,21 @@
                 grid-template-columns: 1fr;
             }
 
-            .popup-btn .btn {
-                padding: 12px 30px;
-                font-size: 1rem;
+            .countdown-item {
+                min-width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .popup-title {
+                font-size: 1.6rem;
+            }
+
+            .popup-sub {
+                font-size: 0.8rem;
+            }
+
+            .popup-description {
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -3201,6 +3252,9 @@
             <div class="popup-btn">
                 <a href="https://wa.me/5562991873663?text=Olá! Quero confirmar presença para assistir à MotoGP 2026 na 2M Motos."
                     target="_blank" class="btn" id="popupCta"><i class="fab fa-whatsapp"></i> Confirmar Presença</a>
+                <button class="btn btn-close-secondary" id="closePopupSecondary">
+                    <i class="fas fa-times"></i> Fechar
+                </button>
             </div>
             <p style="text-align: center; color: #aaa; margin-top: 20px; font-size: 0.8rem;">🏁 Traz a galera e vem
                 torcer com a gente!</p>
@@ -3209,7 +3263,7 @@
 
     <script>
         // ============================================
-        // CONFIGURAÇÕES DO BASEROW (mesmo código original)
+        // CONFIGURAÇÕES DO BASEROW
         // ============================================
         const BASEROW_CONFIG = {
             TOKEN: 'qKIgfLN57iiG7V25oEFAfFkNe95DyhQ1',
@@ -3328,11 +3382,12 @@
         });
 
         // ============================================
-        // FUNÇÕES DO POPUP MOTO GP (mesmo código original)
+        // FUNÇÕES DO POPUP MOTO GP
         // ============================================
         function initializeMotoGpPopup() {
             const popup = document.getElementById('motoGpPopup');
             const closeBtn = document.getElementById('closePopup');
+            const closeSecondary = document.getElementById('closePopupSecondary');
             const popupCta = document.getElementById('popupCta');
 
             if (!sessionStorage.getItem('popupMotoGpClosed')) {
@@ -3347,6 +3402,9 @@
             }
 
             closeBtn.addEventListener('click', closePopup);
+            if (closeSecondary) {
+                closeSecondary.addEventListener('click', closePopup);
+            }
             popupCta.addEventListener('click', function (e) {
                 e.preventDefault();
                 closePopup();
@@ -3478,43 +3536,665 @@
             });
         }
 
-        // As demais funções (checkAuthentication, updateUIAfterLogin, handleConfigClick, switchTab, handleLogin, loadMotosFromBaserow, etc.) 
-        // permanecem exatamente iguais ao código original, apenas omitidas aqui por brevidade, mas devem ser mantidas na íntegra.
-        // Por questão de espaço, não as repetiremos, mas no código final elas devem estar presentes.
-        // OBS: No código real, todas as funções do JavaScript original devem ser incluídas.
-        // Aqui estamos apenas mostrando a estrutura modificada no CSS e HTML.
-        // Certifique-se de copiar todas as funções JavaScript do código original para o arquivo final.
+        // ============================================
+        // FUNÇÕES DE AUTENTICAÇÃO E ADMINISTRAÇÃO
+        // ============================================
+        function checkAuthentication() {
+            const token = localStorage.getItem('authToken');
+            const user = localStorage.getItem('currentUser');
 
-        // Para simplificar, manteremos o restante do JavaScript como estava originalmente.
-        // As funções listadas abaixo são apenas placeholders; o código completo deve ser inserido.
+            if (token && user) {
+                APP_STATE.isAuthenticated = true;
+                APP_STATE.currentUser = user;
+                updateUIAfterLogin();
+            }
+        }
 
-        function checkAuthentication() { /* original */ }
-        function updateUIAfterLogin() { /* original */ }
-        function handleConfigClick() { /* original */ }
-        function switchTab(tabName) { /* original */ }
-        async function handleLogin(e) { /* original */ }
-        async function loadMotosFromBaserow() { /* original */ }
-        function renderMotoList() { /* original */ }
-        function selectMoto(moto, index) { /* original */ }
-        async function handleSaveMoto(e) { /* original */ }
-        async function deleteMoto(moto, index) { /* original */ }
-        function handleLogout() { /* original */ }
-        function closeModal(modal) { /* original */ }
-        function clearMotoForm() { /* original */ }
-        function formatPrice(price) { /* original */ }
-        function initializeCarousel() { /* original */ }
-        function createSlideHTML(moto) { /* original */ }
-        function goToSlide(index) { /* original */ }
-        function nextSlide() { /* original */ }
-        function prevSlide() { /* original */ }
-        function updateCarouselCounter() { /* original */ }
-        function startAutoPlay() { /* original */ }
-        function stopAutoPlay() { /* original */ }
-        function resetAutoPlay() { /* original */ }
-        function updateActiveLink() { /* original */ }
-        function updateCurrentYear() { /* original */ }
-        function authenticateLocally(username, password) { /* original */ }
-        // ... etc.
+        function updateUIAfterLogin() {
+            const configBtn = document.getElementById('configBtn');
+            const userInfo = document.getElementById('userInfo');
+            const userName = document.getElementById('currentUserName');
+            const motosTab = document.querySelector('[data-tab="motos"]');
+
+            if (APP_STATE.isAuthenticated) {
+                configBtn.classList.add('authenticated');
+                configBtn.setAttribute('title', `Logado como ${APP_STATE.currentUser}`);
+
+                userInfo.style.display = 'block';
+                userName.textContent = APP_STATE.currentUser;
+
+                motosTab.style.display = 'block';
+            }
+        }
+
+        function handleConfigClick() {
+            const modal = document.getElementById('adminModal');
+
+            if (APP_STATE.isAuthenticated) {
+                switchTab('motos');
+                loadMotosForEditing();
+            } else {
+                switchTab('login');
+            }
+
+            modal.classList.add('active');
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.tab === tabName);
+            });
+
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.toggle('active', content.id === `${tabName}Tab`);
+            });
+
+            if (tabName === 'motos' && APP_STATE.isAuthenticated) {
+                loadMotosForEditing();
+            }
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const submitBtn = document.getElementById('loginSubmit');
+            const loading = submitBtn.querySelector('.loading');
+            const alert = document.getElementById('adminAlert');
+
+            try {
+                submitBtn.disabled = true;
+                loading.style.display = 'inline-block';
+                showAlert('', 'Autenticando...', alert, 'info');
+
+                const usuarios = await fetchUsuariosFromBaserow();
+
+                if (usuarios === null) {
+                    const usuarioValido = authenticateLocally(username, password);
+                    if (usuarioValido) {
+                        completeLogin(username);
+                        showAlert('success', 'Login realizado com sucesso (modo local)!', alert);
+                    } else {
+                        throw new Error('Usuário ou senha incorretos');
+                    }
+                } else {
+                    const usuarioValido = usuarios.find(
+                        user => user.login === username && user.senha === password
+                    );
+
+                    if (usuarioValido) {
+                        completeLogin(username);
+                        showAlert('success', 'Login realizado com sucesso!', alert);
+                    } else {
+                        throw new Error('Usuário ou senha incorretos');
+                    }
+                }
+            } catch (error) {
+                showAlert('error', error.message, alert);
+            } finally {
+                submitBtn.disabled = false;
+                loading.style.display = 'none';
+            }
+        }
+
+        function completeLogin(username) {
+            APP_STATE.isAuthenticated = true;
+            APP_STATE.currentUser = username;
+
+            localStorage.setItem('authToken', 'authenticated');
+            localStorage.setItem('currentUser', username);
+
+            updateUIAfterLogin();
+            switchTab('motos');
+            loadMotosForEditing();
+        }
+
+        function loadMotosForEditing() {
+            try {
+                renderMotoList();
+            } catch (error) {
+                console.error('Erro ao carregar motos:', error);
+                showAlert('error', 'Erro ao carregar motos', document.getElementById('adminAlert'));
+            }
+        }
+
+        function renderMotoList() {
+            const motoList = document.getElementById('motoList');
+            motoList.innerHTML = '';
+
+            if (APP_STATE.motos.length === 0) {
+                motoList.innerHTML = '<div class="moto-item" style="text-align: center; color: var(--gray);">Nenhuma moto cadastrada</div>';
+                return;
+            }
+
+            APP_STATE.motos.forEach((moto, index) => {
+                const motoItem = document.createElement('div');
+                motoItem.className = 'moto-item';
+                motoItem.dataset.index = index;
+
+                motoItem.innerHTML = `
+                    <div class="moto-info">
+                        <div class="moto-title">${moto.marca} ${moto.modelo}</div>
+                        <div class="moto-details">${moto.ano} | ${moto.cilindrada} | R$ ${formatPrice(moto.valor)}</div>
+                        <small style="color: ${moto.destaque ? 'var(--success)' : 'var(--gray)'};">
+                            ${moto.destaque ? '★ Em destaque' : 'Não destacada'}
+                        </small>
+                    </div>
+                    <div class="moto-actions">
+                        <button class="action-btn btn-edit" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn btn-delete" title="Excluir">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+
+                const editBtn = motoItem.querySelector('.btn-edit');
+                const deleteBtn = motoItem.querySelector('.btn-delete');
+
+                editBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    selectMoto(moto, index);
+                });
+
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    deleteMoto(moto, index);
+                });
+
+                motoItem.addEventListener('click', () => selectMoto(moto, index));
+                motoList.appendChild(motoItem);
+            });
+        }
+
+        function selectMoto(moto, index) {
+            APP_STATE.selectedMoto = moto;
+
+            document.querySelectorAll('.moto-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            document.querySelectorAll('.moto-item')[index]?.classList.add('active');
+
+            document.getElementById('motoId').value = moto.baserow_id || moto.id || '';
+            document.getElementById('motoImagem').value = moto.imagem || '';
+            document.getElementById('motoMarca').value = moto.marca || '';
+            document.getElementById('motoModelo').value = moto.modelo || '';
+            document.getElementById('motoAno').value = moto.ano || '';
+            document.getElementById('motoCilindrada').value = moto.cilindrada || '';
+            document.getElementById('motoCor').value = moto.cor || '';
+            document.getElementById('motoValor').value = moto.valor || '';
+            document.getElementById('motoDescricao').value = moto.descricao || '';
+            document.getElementById('motoCategoria').value = moto.categoria || 'esportiva';
+            document.getElementById('motoDestaque').value = moto.destaque ? 'true' : 'false';
+            document.getElementById('motoOrdem').value = moto.ordem || '';
+        }
+
+        async function handleSaveMoto(e) {
+            e.preventDefault();
+
+            const motoId = document.getElementById('motoId').value;
+            const motoData = {
+                imagem: document.getElementById('motoImagem').value,
+                marca: document.getElementById('motoMarca').value,
+                modelo: document.getElementById('motoModelo').value,
+                ano: document.getElementById('motoAno').value,
+                cilindrada: document.getElementById('motoCilindrada').value,
+                cor: document.getElementById('motoCor').value,
+                valor: document.getElementById('motoValor').value,
+                descricao: document.getElementById('motoDescricao').value,
+                categoria: document.getElementById('motoCategoria').value,
+                destaque: document.getElementById('motoDestaque').value === 'true',
+                ordem: parseInt(document.getElementById('motoOrdem').value) || 99,
+                ativo: true
+            };
+
+            const submitBtn = document.getElementById('saveMoto');
+            const loading = submitBtn.querySelector('.loading');
+            const alert = document.getElementById('adminAlert');
+
+            try {
+                submitBtn.disabled = true;
+                loading.style.display = 'inline-block';
+                showAlert('', 'Salvando...', alert, 'info');
+
+                let savedMoto;
+                const isUpdate = !!motoId;
+
+                if (isUpdate) {
+                    motoData.baserow_id = motoId;
+                    savedMoto = await saveMotoToBaserow(motoData, true);
+
+                    const index = APP_STATE.motos.findIndex(m => (m.baserow_id == motoId) || (m.id == motoId));
+                    if (index !== -1) {
+                        APP_STATE.motos[index] = { ...APP_STATE.motos[index], ...motoData, baserow_id: motoId };
+                    }
+                    showAlert('success', 'Moto atualizada com sucesso!', alert);
+                } else {
+                    savedMoto = await saveMotoToBaserow(motoData, false);
+
+                    const newId = Math.max(...APP_STATE.motos.map(m => m.id), 0) + 1;
+                    const newMoto = {
+                        id: newId,
+                        baserow_id: savedMoto.id,
+                        ...motoData
+                    };
+                    APP_STATE.motos.push(newMoto);
+                    showAlert('success', 'Moto criada com sucesso!', alert);
+                }
+
+                renderMotoList();
+                initializeCarousel();
+                clearMotoForm();
+
+            } catch (error) {
+                console.error('Erro ao salvar moto:', error);
+                handleSaveMotoLocally(motoId, motoData, alert);
+                submitBtn.disabled = false;
+                loading.style.display = 'none';
+            }
+        }
+
+        function handleSaveMotoLocally(motoId, motoData, alert) {
+            try {
+                if (motoId) {
+                    const index = APP_STATE.motos.findIndex(m => m.id == motoId);
+                    if (index !== -1) {
+                        APP_STATE.motos[index] = { ...APP_STATE.motos[index], ...motoData };
+                    }
+                    showAlert('success', 'Moto atualizada localmente!', alert);
+                } else {
+                    const newId = Math.max(...APP_STATE.motos.map(m => m.id), 0) + 1;
+                    const newMoto = { id: newId, ...motoData };
+                    APP_STATE.motos.push(newMoto);
+                    showAlert('success', 'Moto criada localmente!', alert);
+                }
+
+                renderMotoList();
+                initializeCarousel();
+                clearMotoForm();
+            } catch (localError) {
+                showAlert('error', 'Erro ao salvar moto localmente', alert);
+            }
+        }
+
+        async function deleteMoto(moto, index) {
+            if (!confirm('Tem certeza que deseja excluir esta moto?')) {
+                return;
+            }
+
+            const alert = document.getElementById('adminAlert');
+
+            try {
+                showAlert('', 'Excluindo...', alert, 'info');
+
+                if (moto.baserow_id) {
+                    await deleteMotoFromBaserow(moto.baserow_id);
+                }
+
+                APP_STATE.motos.splice(index, 1);
+
+                showAlert('success', 'Moto excluída com sucesso!', alert);
+
+                renderMotoList();
+                initializeCarousel();
+                clearMotoForm();
+
+            } catch (error) {
+                console.error('Erro ao excluir moto:', error);
+                APP_STATE.motos.splice(index, 1);
+                showAlert('success', 'Moto excluída localmente!', alert);
+                renderMotoList();
+                initializeCarousel();
+                clearMotoForm();
+            }
+        }
+
+        function handleLogout() {
+            if (confirm('Deseja sair da administração?')) {
+                APP_STATE.isAuthenticated = false;
+                APP_STATE.currentUser = null;
+
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('currentUser');
+
+                const configBtn = document.getElementById('configBtn');
+                configBtn.classList.remove('authenticated');
+                configBtn.removeAttribute('title');
+
+                const userInfo = document.getElementById('userInfo');
+                userInfo.style.display = 'none';
+
+                document.querySelectorAll('.tab-btn').forEach(tab => {
+                    if (tab.dataset.tab !== 'login') {
+                        tab.style.display = 'none';
+                    }
+                });
+
+                switchTab('login');
+                clearMotoForm();
+                showAlert('success', 'Logout realizado com sucesso!', document.getElementById('adminAlert'));
+            }
+        }
+
+        // ============================================
+        // FUNÇÕES AUXILIARES
+        // ============================================
+        function showAlert(type, message, container, style = type) {
+            container.textContent = message;
+            container.className = `alert alert-${style}`;
+            container.style.display = 'block';
+
+            setTimeout(() => {
+                container.style.display = 'none';
+            }, 5000);
+        }
+
+        function closeModal(modal) {
+            modal.classList.remove('active');
+            clearMotoForm();
+        }
+
+        function clearMotoForm() {
+            document.getElementById('motoForm').reset();
+            document.getElementById('motoId').value = '';
+            APP_STATE.selectedMoto = null;
+
+            document.querySelectorAll('.moto-item').forEach(item => {
+                item.classList.remove('active');
+            });
+        }
+
+        function formatPrice(price) {
+            return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        // ============================================
+        // FUNÇÕES DO CARROSSEL
+        // ============================================
+        function initializeCarousel() {
+            const carouselContainer = document.getElementById('carouselContainer');
+            const carouselIndicators = document.getElementById('carouselIndicators');
+
+            carouselContainer.innerHTML = '';
+            carouselIndicators.innerHTML = '';
+
+            const carouselMotos = APP_STATE.motos
+                .filter(moto => moto.destaque && moto.ativo)
+                .sort((a, b) => a.ordem - b.ordem)
+                .slice(0, 5);
+
+            if (carouselMotos.length === 0) {
+                const defaultMotos = APP_STATE.motos.slice(0, 5);
+                carouselMotos.push(...defaultMotos);
+            }
+
+            carouselMotos.forEach((moto, index) => {
+                const slide = document.createElement('div');
+                slide.className = 'carousel-slide';
+                slide.innerHTML = createSlideHTML(moto);
+                carouselContainer.appendChild(slide);
+
+                const indicator = document.createElement('button');
+                indicator.className = `carousel-indicator ${index === 0 ? 'active' : ''}`;
+                indicator.setAttribute('data-index', index);
+                indicator.setAttribute('aria-label', `Ir para slide ${index + 1}`);
+                indicator.addEventListener('click', () => goToSlide(index));
+                carouselIndicators.appendChild(indicator);
+            });
+
+            updateCarouselCounter();
+        }
+
+        function createSlideHTML(moto) {
+            return `
+                <div class="carousel-slide-content">
+                    <div class="carousel-image-container">
+                        <img src="${moto.imagem}" alt="${moto.marca} ${moto.modelo}" class="carousel-image" loading="lazy">
+                    </div>
+                    <div class="carousel-info">
+                        <h2 class="carousel-title">${moto.marca} ${moto.modelo}</h2>
+                        <p class="carousel-subtitle">${moto.descricao}</p>
+                        
+                        <div class="carousel-specs">
+                            <div class="carousel-spec">
+                                <div class="carousel-spec-icon">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <span class="carousel-spec-label">Ano</span>
+                                <span class="carousel-spec-value">${moto.ano}</span>
+                            </div>
+                            <div class="carousel-spec">
+                                <div class="carousel-spec-icon">
+                                    <i class="fas fa-tachometer-alt"></i>
+                                </div>
+                                <span class="carousel-spec-label">Cilindrada</span>
+                                <span class="carousel-spec-value">${moto.cilindrada}</span>
+                            </div>
+                            <div class="carousel-spec">
+                                <div class="carousel-spec-icon">
+                                    <i class="fas fa-palette"></i>
+                                </div>
+                                <span class="carousel-spec-label">Cor</span>
+                                <span class="carousel-spec-value">${moto.cor}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="carousel-price">R$ ${formatPrice(moto.valor)}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function goToSlide(index) {
+            const carouselContainer = document.getElementById('carouselContainer');
+            const indicators = document.querySelectorAll('.carousel-indicator');
+            const totalSlides = document.querySelectorAll('.carousel-slide').length;
+
+            if (index < 0) index = totalSlides - 1;
+            if (index >= totalSlides) index = 0;
+
+            APP_STATE.carouselIndex = index;
+            carouselContainer.style.transform = `translateX(-${index * 100}%)`;
+
+            indicators.forEach((indicator, i) => {
+                indicator.classList.toggle('active', i === index);
+            });
+
+            updateCarouselCounter();
+            resetAutoPlay();
+        }
+
+        function nextSlide() {
+            goToSlide(APP_STATE.carouselIndex + 1);
+        }
+
+        function prevSlide() {
+            goToSlide(APP_STATE.carouselIndex - 1);
+        }
+
+        function updateCarouselCounter() {
+            const counter = document.getElementById('carouselCounter');
+            const totalSlides = document.querySelectorAll('.carousel-slide').length;
+            counter.textContent = `${APP_STATE.carouselIndex + 1} / ${totalSlides}`;
+        }
+
+        function startAutoPlay() {
+            APP_STATE.carouselInterval = setInterval(nextSlide, 5000);
+        }
+
+        function stopAutoPlay() {
+            if (APP_STATE.carouselInterval) {
+                clearInterval(APP_STATE.carouselInterval);
+                APP_STATE.carouselInterval = null;
+            }
+        }
+
+        function resetAutoPlay() {
+            stopAutoPlay();
+            startAutoPlay();
+        }
+
+        function updateActiveLink() {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('nav a, .mobile-nav a');
+            let current = '';
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (window.scrollY >= (sectionTop - 150)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        function updateCurrentYear() {
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+        }
+
+        function authenticateLocally(username, password) {
+            return username === 'admin' && password === '123456';
+        }
+
+        // ============================================
+        // FUNÇÕES BASEROW
+        // ============================================
+        async function fetchUsuariosFromBaserow() {
+            try {
+                const response = await fetch(USERS_API_URL, {
+                    headers: {
+                        'Authorization': `Token ${BASEROW_CONFIG.TOKEN}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erro na API: ${response.status}`);
+                }
+
+                const data = await response.json();
+                return data.results || [];
+            } catch (error) {
+                console.error('Erro ao buscar usuários:', error);
+                return null;
+            }
+        }
+
+        async function fetchMotosFromBaserow() {
+            try {
+                const response = await fetch(MOTOS_API_URL, {
+                    headers: {
+                        'Authorization': `Token ${BASEROW_CONFIG.TOKEN}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erro na API: ${response.status}`);
+                }
+
+                const data = await response.json();
+                return data.results || [];
+            } catch (error) {
+                console.error('Erro ao buscar motos:', error);
+                return null;
+            }
+        }
+
+        async function loadMotosFromBaserow() {
+            try {
+                const motosFromBaserow = await fetchMotosFromBaserow();
+
+                if (motosFromBaserow && motosFromBaserow.length > 0) {
+                    APP_STATE.motos = motosFromBaserow.map(moto => ({
+                        baserow_id: moto.id,
+                        id: moto.id || moto.id,
+                        imagem: moto.imagem || '',
+                        marca: moto.marca || '',
+                        modelo: moto.modelo || '',
+                        ano: moto.ano || '',
+                        cilindrada: moto.cilindrada || '',
+                        cor: moto.cor || '',
+                        valor: moto.valor || '',
+                        descricao: moto.descricao || '',
+                        categoria: moto.categoria || 'esportiva',
+                        destaque: moto.destaque || false,
+                        ordem: moto.ordem || 99,
+                        ativo: moto.ativo !== false
+                    }));
+
+                    APP_STATE.motos = APP_STATE.motos.filter(moto => moto.ativo);
+                } else {
+                    APP_STATE.motos = [...INITIAL_MOTOS];
+                }
+
+                initializeCarousel();
+            } catch (error) {
+                console.error('Erro ao carregar motos:', error);
+                APP_STATE.motos = [...INITIAL_MOTOS];
+                initializeCarousel();
+            }
+        }
+
+        async function saveMotoToBaserow(motoData, isUpdate = false) {
+            try {
+                let url = MOTOS_API_URL;
+                let method = 'POST';
+
+                if (isUpdate && motoData.baserow_id) {
+                    url = `${BASEROW_CONFIG.BASE_URL}/${BASEROW_CONFIG.MOTOS_TABLE_ID}/${motoData.baserow_id}/?user_field_names=true`;
+                    method = 'PATCH';
+                }
+
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Authorization': `Token ${BASEROW_CONFIG.TOKEN}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(motoData)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erro ao salvar moto: ${response.status}`);
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('Erro ao salvar moto:', error);
+                throw error;
+            }
+        }
+
+        async function deleteMotoFromBaserow(baserowId) {
+            try {
+                const url = `${BASEROW_CONFIG.BASE_URL}/${BASEROW_CONFIG.MOTOS_TABLE_ID}/${baserowId}/`;
+                const response = await fetch(url, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Token ${BASEROW_CONFIG.TOKEN}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erro ao excluir moto: ${response.status}`);
+                }
+
+                return true;
+            } catch (error) {
+                console.error('Erro ao excluir moto:', error);
+                throw error;
+            }
+        }
     </script>
 </body>
 
