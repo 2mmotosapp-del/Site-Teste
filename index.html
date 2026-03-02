@@ -1646,7 +1646,8 @@
         .float-buttons {
             position: fixed;
             bottom: 30px;
-            right: 30px;
+            left: 30px;
+            right: auto;
             z-index: 999;
             display: flex;
             flex-direction: column;
@@ -1682,7 +1683,7 @@
 
         .float-tooltip {
             position: absolute;
-            right: 70px;
+            left: 70px;
             top: 50%;
             transform: translateY(-50%);
             background-color: var(--dark);
@@ -2107,7 +2108,7 @@
 
             .float-buttons {
                 bottom: 20px;
-                right: 20px;
+                left: 20px;
             }
 
             .float-btn {
@@ -2390,7 +2391,7 @@
 
             .float-buttons {
                 bottom: 15px;
-                right: 15px;
+                left: 15px;
             }
 
             .float-btn {
@@ -3063,16 +3064,15 @@
 
     <!-- BOTÕES FLUTUANTES -->
     <div class="float-buttons">
-        <a href="https://wa.me/5562991873663?text=Olá! Gostaria de informações sobre as motos da 2M Motos."
-            target="_blank" rel="noopener noreferrer" class="float-btn whatsapp" aria-label="Conversar no WhatsApp">
-            <i class="fab fa-whatsapp" aria-hidden="true"></i>
-            <span class="float-tooltip">Fale no WhatsApp</span>
-        </a>
-
         <a href="https://www.instagram.com/2m.motos/" target="_blank" rel="noopener noreferrer"
             class="float-btn instagram" aria-label="Seguir no Instagram">
             <i class="fab fa-instagram" aria-hidden="true"></i>
             <span class="float-tooltip">Siga no Instagram</span>
+        </a>
+        <a href="https://wa.me/5562991873663?text=Olá! Gostaria de informações sobre as motos da 2M Motos."
+            target="_blank" rel="noopener noreferrer" class="float-btn whatsapp" aria-label="Conversar no WhatsApp">
+            <i class="fab fa-whatsapp" aria-hidden="true"></i>
+            <span class="float-tooltip">Fale no WhatsApp</span>
         </a>
     </div>
 
